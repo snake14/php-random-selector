@@ -1,0 +1,53 @@
+<script>
+	$(function() {
+		$('#random_number_form').on('submit', function() {
+			// Validate the form before trying to select a number.
+			$form = $(this);
+			var isValid = $form[0].checkValidity();
+			$form.addClass('was-validated');
+			// If validation failed, don't submit the form.
+			if(isValid === false) {
+				return false;
+			}
+
+			var first = parseInt($('#start').val());
+			var second = parseInt($('#end').val());
+			// Make sure that the lower of the two numbers it first.
+			if(second < first) {
+				second = first;
+				first = parseInt($('#end').val());
+			}
+			var diff = Math.abs(first - second)  + 1;
+			var result = Math.floor(Math.random() * diff) + first;
+			$('#info_modal .modal-body').html('Result: ' + result);
+			// Display the result.
+			$('#info_modal').modal('show');
+			return false;
+		});
+
+		$('#clear_btn').on('click', function() {
+			$('#start').val('');
+			$('#end').val('');
+		});
+	});
+</script>
+<p>Randomly pick a number between:</p>
+<form id="random_number_form">
+	<div class="form-row">
+		<div class="form-group col-auto">
+			<input type="number" class="form-control" name="start" id="start" required>
+		</div>
+		<div class="form-group col-auto pt-2">
+			and
+		</div>
+		<div class="form-group col-auto">
+			<input type="number" class="form-control" name="end" id="end" required>
+		</div>
+	</div>
+	<div class="form-row">
+		<div class="form-group col">
+			<button type="submit" class="btn btn-primary">Submit</button>
+			<button type="button" class="btn btn-secondary" id="clear_btn">Clear</button>
+		</div>
+	</div>
+</form>

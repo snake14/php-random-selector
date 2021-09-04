@@ -1,0 +1,35 @@
+<script>
+	$(function() {
+		var coin_image_urls = [
+			'http://lincolnpennies.net/wp-content/uploads/2009/08/lincoln_penny_obverse1.jpg',
+			'http://lincolnpennies.net/wp-content/uploads/2009/08/lincoln-memorial-penny.jpg'
+		];
+
+		$('#coin_flip_form').on('submit', function() {
+			var index = Math.floor(Math.random() * 2);
+			$('#coin_image').hide();
+			$('#flip_spinner').show();
+			$('#coin_image').attr('src', coin_image_urls[index]);
+
+			setTimeout(function() {
+				$('#coin_image').show();
+				$('#flip_spinner').hide();
+			}, 500);
+
+			return false;
+		});
+
+		$('#coin_flip_form .clear-btn').on('click', function() {
+			$('#coin_image').attr('src', '{{ @defaultImageLink }}');
+		});
+	});
+</script>
+<form id="coin_flip_form">
+	<div class="form-row">
+		<div class="form-group col">
+			<button type="submit" class="btn btn-primary">Flip</button>
+			<button type="button" class="btn btn-secondary clear-btn">Reset</button>
+		</div>
+	</div>
+</form>
+<img src="{{ @defaultImageLink }}" id="coin_image" style="max-width: 200px;" />
