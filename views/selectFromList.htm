@@ -1,13 +1,46 @@
 <script>
 	$(function() {
 		$('#add_item_btn').on('click', function() {
-			// TODO - Open a modal for entering the name of a new item.
+			// Open a modal for entering the name of a new item.
+			$('#add_edit_modal').modal('show');
+		});
+
+		$('#clear_btn').on('click', function() {
+			// Remove all but the first, since that's the header.
+			$('#item_list li').not(':first').remove();
+		});
+
+		$('#select_btn').on('click', function() {
+			var count = $('#item_list li').length;
+
+			// The header item plus at least 2 more.
+			if(count < 3) {
+				// Display a warning.
+				$('#info_modal .modal-body').html('<h4>Please have at least two items to select from.</h4>');
+				$('#info_modal').modal('show');
+				return false;
+			}
+
+			// Pop the modal with a spinner so that the user knows that something is happening.
+			$('#info_modal .modal-body').html('<div class="spinner-border" role="status"><span class="sr-only">Loading...</span></div>');
+			$('#info_modal').modal('show');
+
+			// Use an API (https://www.random.org/clients/http/) to get a more random number than Math.random can produce.
+			var url = 'https://www.random.org/integers/?num=1&min=0&max=' + (count - 2) + '&col=1&base=10&format=plain&rnd=new';
+			$.get(url, function(result) {
+				var item = $('#item_list li').get(parseInt(result) + 1);
+				// Display the result.
+				$('#info_modal .modal-body').html('<h4>Result: ' + $(item).data('val') + '</h4>');
+			});
 		});
 	});
 </script>
-<ul class="list-group">
+<ul class="list-group" id="item_list">
 	<li class="list-group-item active">
 		<span style="font-size: 1.5rem;">Selection List</span>
 		<button type="button" class="btn btn-light float-right" id="add_item_btn">Add</button>
 	</li>
 </ul>
+<button type="button" class="btn btn-primary mt-3" id="select_btn">Submit</button>
+<button type="button" class="btn btn-secondary mt-3" id="clear_btn">Clear</button>
+<include href="../views/addEditItemModal.htm" />
